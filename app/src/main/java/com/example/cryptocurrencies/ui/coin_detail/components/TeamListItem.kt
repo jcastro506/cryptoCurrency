@@ -14,7 +14,7 @@ import java.lang.reflect.Modifier
 
 @Composable
 fun TeamListItem(
-    teamMember : Team,
+    teamMember: Team,
     modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier
 ) {
     Column(
@@ -26,6 +26,10 @@ fun TeamListItem(
             style = MaterialTheme.typography.h4
         )
         Spacer(modifier = androidx.compose.ui.Modifier.height(4.dp))
-        Text(text = teamMember.position, style = MaterialTheme.typography.body2, fontStyle = FontStyle.Italic)
+        Text(
+            text = teamMember.position,
+            style = MaterialTheme.typography.body2,
+            fontStyle = FontStyle.Italic
+        )
     }
 }

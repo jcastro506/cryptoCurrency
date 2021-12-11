@@ -25,57 +25,74 @@ import com.example.cryptocurrencies.ui.coin_list.components.CoinListItem
 import com.google.accompanist.flowlayout.FlowRow
 
 @Composable
-fun CoinDetailsScreen(
+fun CoinDetailScreen(
     viewModel: CoinDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
     Box(modifier = Modifier.fillMaxSize()) {
         state.coin?.let { coin ->
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(20.dp)
+            ) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "${coin.rank}. ${coin.name} (${coin.symbol})",
+                            style = MaterialTheme.typography.h2,
+                            modifier = Modifier.weight(8f)
+                        )
+                        Text(
+                            text = if(coin.isActive) "active" else "inactive",
+                            color = if(coin.isActive) Color.Green else Color.Red,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .align(CenterVertically)
+                                .weight(2f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(15.dp))
                     Text(
-                        text = "${coin.rank}. ${coin.name} (${coin.symbol})",
-                        style = MaterialTheme.typography.h2
+                        text = coin.description,
+                        style = MaterialTheme.typography.body2
                     )
+                    Spacer(modifier = Modifier.height(15.dp))
                     Text(
-                        text = if(coin.isActive) "active" else "inactive",
-                        color = if(coin.isActive) Color.Green else Color.Red,
-                        fontStyle = FontStyle.Italic,
-                        textAlign = TextAlign.End,
+                        text = "Tags",
+                        style = MaterialTheme.typography.h3
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                    FlowRow(
+                        mainAxisSpacing = 10.dp,
+                        crossAxisSpacing = 10.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        coin.tags.forEach { tag ->
+                            CoinTag(tag = tag)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(15.dp))
+                    Text(
+                        text = "Team members",
+                        style = MaterialTheme.typography.h3
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                }
+                items(coin.team) { teamMember ->
+                    TeamListItem(
+                        teamMember = teamMember,
                         modifier = Modifier
-                            .align(CenterVertically)
-                            .weight(2f)
+                            .fillMaxWidth()
+                            .padding(10.dp)
                     )
+                    Divider()
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(text = coin.description, style = MaterialTheme.typography.body2)
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "Tags", style = MaterialTheme.typography.h3)
-                Spacer(modifier = Modifier.height(15.dp))
-                FlowRow(
-                    mainAxisSpacing = 10.dp,
-                    crossAxisSpacing = 10.dp,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    coin.tags.forEach{ tag -> CoinTag(tag = tag)}
-                }
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "Team Members", style = MaterialTheme.typography.h3)
-                Spacer(modifier = Modifier.height(15.dp))
-                }
-            items(coin.team) { teamMember ->
-                TeamListItem(teamMember = teamMember,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp))
-                Divider()
             }
         }
-    }
         if(state.error.isNotBlank()) {
             Text(
                 text = state.error,
